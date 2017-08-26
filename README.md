@@ -1,4 +1,5 @@
 @Test
+
 	public void lineEchartTest() {//3行关键代码(21,33,35)搞定折线图，其他都是测试数据准备（实际开发场景是service层给到的数据）
 		String model="{title: {text: '#title#'},tooltip : {trigger: 'axis'},legend: {data:#stack#},toolbox: {feature: {saveAsImage: {}}},grid: {left: '3%',right: '4%',"
 				+ "bottom: '3%',containLabel: true},xAxis : [{type : 'category',boundaryGap : false,data : #xAxis#}],yAxis : [{type : 'value'}],series : #stackData#}";
@@ -6,10 +7,7 @@
 		Echart e=new Echart(model);//.............................................................................
 		List<LinkedHashMap<String, Object>> varList=new ArrayList<LinkedHashMap<String, Object>>();
 		LinkedHashMap<String, Object>row=new LinkedHashMap<String, Object>();
-		row.put("lineName", "折线A");
-		row.put("1", 23);	
-		
-		row.put("2", 31);	
+		row.put("lineName", "折线A");	row.put("1", 23);	row.put("2", 31);	
 		row.put("3", 52);	row.put("4", 82);	row.put("5", 252);	row.put("6", 152);
 		LinkedHashMap<String, Object>row2=new LinkedHashMap<String, Object>();
 		row2.putAll(row);	row2.put("lineName", "折线B");
