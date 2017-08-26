@@ -1,3 +1,4 @@
+根据模板引擎思想，快速生成echart图表所需json数据
 @Test
 
 	public void lineEchartTest() {//3行关键代码(21,33,35)搞定折线图，其他都是测试数据准备（实际开发场景是service层给到的数据）
