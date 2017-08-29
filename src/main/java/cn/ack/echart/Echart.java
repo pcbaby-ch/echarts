@@ -1,6 +1,7 @@
 package cn.ack.echart;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -61,7 +62,6 @@ public class Echart {
 			//根据key替换Option字符串里的字符
 			chartString=chartString.replace(entry.getKey()+"", value);
 		}
-		chartString=chartString.replace("\"", "'");
 		return chartString;
 	}
 	
@@ -71,7 +71,7 @@ public class Echart {
 	 * @param varList 提示：list记录中首字段必须是lineName
 	 * @return
 	 */
-	public static StringBuffer getLineSeriesStr(List<LinkedHashMap<String, Object>> varList) {
+	public static String getLineSeriesStr(List<LinkedHashMap<String, Object>> varList) {
 		StringBuffer seriesStr=new StringBuffer("[");
 		for (int i = 0; i < varList.size(); i++) {
 			LinkedHashMap<String, Object> row=varList.get(i);
@@ -95,6 +95,20 @@ public class Echart {
 			else
 				seriesStr.append(lineStr+",");
 		}
+		return seriesStr.toString();
+	}
+	
+	public static String getInerPieSeriesStr(ArrayList<HashMap<String,Object>> inerList,ArrayList<HashMap<String,Object>>outList) {
+		String seriesStr="";
+		String innerRing="{         name:'访问来源',         type:'pie',         selectedMode: 'single',         radius: [0, '30%'],         label: {             normal: {                 position: 'inner'             }         },         labelLine: {             normal: {                 show: false             }         },         data:[             {value:335, name:'直达', selected:true},             {value:679, name:'营销广告'},             {value:1548, name:'搜索引擎'}         ]     }";
+		innerRing="{         name:'访问来源',         type:'pie',         selectedMode: 'single',         radius: [0, '30%'],         label: {             normal: {                 position: 'inner'             }         },         labelLine: {             normal: {                 show: false             }         },         data:#innerData#     }";
+		//填充内环数据
+		innerRing=innerRing.replace("#innerData#", JSONArray.fromObject(inerList)+"");
+		String outRing="{         name:'访问来源',         type:'pie',         radius: ['40%', '55%'],         label: {             normal: {                 formatter: '{a|{a}}{abg|}\\n{hr|}\\n  {b|{b}：}{c}  {per|{d}%}  ',                 backgroundColor: '#eee',                 borderColor: '#aaa',                 borderWidth: 1,                 borderRadius: 4,                                  rich: {                     a: {                         color: '#999',                         lineHeight: 22,                         align: 'center'                     },                                          hr: {                         borderColor: '#aaa',                         width: '100%',                         borderWidth: 0.5,                         height: 0                     },                     b: {                         fontSize: 16,                         lineHeight: 33                     },                     per: {                         color: '#eee',                         backgroundColor: '#334455',                         padding: [2, 4],                         borderRadius: 2                     }                 }             }         },         data:[             {value:335, name:'直达'},             {value:310, name:'邮件营销'},             {value:234, name:'联盟广告'},             {value:135, name:'视频广告'},             {value:1048, name:'百度'},             {value:251, name:'谷歌'},             {value:147, name:'必应'},             {value:102, name:'其他'}         ]     }";
+		outRing="{         name:'访问来源',         type:'pie',         radius: ['40%', '55%'],         label: {             normal: {                 formatter: '{a|{a}}{abg|}\\n{hr|}\\n  {b|{b}：}{c}  {per|{d}%}  ',                 backgroundColor: '#eee',                 borderColor: '#aaa',                 borderWidth: 1,                 borderRadius: 4,                                  rich: {                     a: {                         color: '#999',                         lineHeight: 22,                         align: 'center'                     },                                          hr: {                         borderColor: '#aaa',                         width: '100%',                         borderWidth: 0.5,                         height: 0                     },                     b: {                         fontSize: 16,                         lineHeight: 33                     },                     per: {                         color: '#eee',                         backgroundColor: '#334455',                         padding: [2, 4],                         borderRadius: 2                     }                 }             }         },         data:#outData#     }";
+		//填充外环数据
+		outRing=outRing.replaceAll("#outData#", JSONArray.fromObject(outList)+"");
+		seriesStr="["+innerRing+","+outRing+"]";
 		return seriesStr;
 	}
 	
@@ -128,5 +142,17 @@ public class Echart {
 				seriesStr.append(lineStr+",");
 		}
 		return seriesStr;
+	}
+	
+	public static void main(String[] args) {
+		ArrayList<HashMap<String,Object>>outList=new ArrayList<HashMap<String,Object>>();
+		HashMap<String,Object>map=new HashMap<String, Object>();
+		map.put("name", "直达");		map.put("value", "356");		outList.add(map);
+		map=new HashMap<String, Object>();		map.put("name", "营销广告");		map.put("value", "656");		outList.add(map);
+		map=new HashMap<String, Object>();		map.put("name", "搜索引擎");		map.put("value", "1656");		outList.add(map);
+		ArrayList<HashMap<String,Object>>innerLst=new ArrayList<HashMap<String,Object>>();innerLst.addAll(outList);
+		map=new HashMap<String, Object>();		map.put("name", "邮件营销");		map.put("value", "315");		outList.add(map);
+		map=new HashMap<String, Object>();		map.put("name", "联盟广告");		map.put("value", "234");		outList.add(map);
+		System.out.println(Echart.getInerPieSeriesStr(innerLst, outList));
 	}
 }
